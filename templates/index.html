@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LabDebug - your practical-lab debugging assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M18 6h12M21 6v12.5L9.8 36.4A4 4 0 0 0 13.3 42h21.4a4 4 0 0 0 3.5-5.6L27 18.5V6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="19" cy="33" r="2.4" fill="currentColor"/><circle cx="27" cy="29" r="1.8" fill="currentColor"/><circle cx="23.5" cy="37" r="1.5" fill="currentColor"/>
+    </svg>
+    <div>
+      <h1>LabDebug</h1>
+      <p class="tagline">Paste a broken practical. Understand every bug. Fix it yourself - AI re-checks it.</p>
+    </div>
+  </div>
+  <div class="engine-chip" title="Every analysis is one Muse Spark Open call">
+    <svg viewBox="0 0 24 24" class="chip-icon"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" fill="currentColor"/></svg>
+    Muse Spark Open on Baseten
+  </div>
+</header>
+
+<main>
+  <section class="card input-card">
+    <div class="step-head">
+      <span class="step-num">1</span>
+      <h2>Your broken practical</h2>
+    </div>
+    <label class="field-label" for="task">What should the program do? <span class="opt">(optional)</span></label>
+    <input id="task" type="text" placeholder="e.g. Print the multiplication table of 7 from 1 to 10">
+    <div class="field-row">
+      <label class="field-label" for="code">Paste the broken code</label>
+      <div class="lang-toggle" role="tablist">
+        <button class="lang-btn active" data-lang="java" type="button">Java</button>
+        <button class="lang-btn" data-lang="xml" type="button">Android XML</button>
+      </div>
+    </div>
+    <textarea id="code" spellcheck="false" placeholder="Paste your broken lab program here..."></textarea>
+    <div class="actions">
+      <button id="debugBtn" class="btn primary" type="button">
+        <svg viewBox="0 0 24 24"><path d="M12 8V5.5M8.5 9 6 6.5M15.5 9 18 6.5M5 13h2m10 0h2M8 17.5 6 19.5m10-2 2 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 7.5c-2.9 0-4.5 2.3-4.5 5.2 0 3.4 1.9 5.8 4.5 5.8s4.5-2.4 4.5-5.8c0-2.9-1.6-5.2-4.5-5.2z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 10v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        Debug it
+      </button>
+      <div class="samples">
+        <span>Try an example:</span>
+        <button class="sample-btn" data-sample="java" type="button">Java 7-table</button>
+        <button class="sample-btn" data-sample="xml" type="button">Android login screen</button>
+      </div>
+    </div>
+    <p id="debugError" class="error" hidden></p>
+  </section>
+
+  <section id="results" class="results" hidden>
+    <div class="card">
+      <div class="step-head">
+        <span class="step-num">2</span>
+        <h2>What's wrong</h2>
+        <span id="bugCount" class="pill"></span>
+      </div>
+      <ul id="bugList" class="bug-list"></ul>
+      <div class="takeaway">
+        <svg viewBox="0 0 24 24"><path d="M9 18h6m-5 3h4M12 3a6 6 0 0 0-3.3 11c.7.6 1.3 1.5 1.3 2.5h4c0-1 .6-1.9 1.3-2.5A6 6 0 0 0 12 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <p id="takeawayText"></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="step-head">
+        <span class="step-num">3</span>
+        <h2>The fixed program</h2>
+        <button id="copyFix" class="btn ghost small" type="button">
+          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 15V6a2 2 0 0 1 2-2h9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="code-block" contenteditable="true" spellcheck="false"><code id="fixedCode"></code></pre>
+      <div class="verify-row">
+        <button id="verifyBtn" class="btn secondary" type="button">
+          <svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.4 3 8.4 7 10 4-1.6 7-5.6 7-10V6l-7-3z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m9 12 2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Re-check my fix
+        </button>
+        <p class="hint">Edit the code above with your own fix first, then re-check it.</p>
+      </div>
+      <div id="verdictBox" class="verdict" hidden>
+        <span id="verdictBadge" class="verdict-badge"></span>
+        <ul id="verdictWhy" class="why-list"></ul>
+      </div>
+      <p id="verifyError" class="error" hidden></p>
+    </div>
+  </section>
+</main>
+
+<div id="loading" class="loading" hidden>
+  <div class="spinner"></div>
+  <p id="loadingText">Muse Spark Open is reading your code...</p>
+</div>
+
+<footer>
+  <p>Built during the Meta Global AI Developer Hackathon. Every bug analysis and re-check is a Muse Spark Open call via the Baseten Model API.</p>
+</footer>
+<script src="/static/app.js"></script>
+</body>
+</html>
